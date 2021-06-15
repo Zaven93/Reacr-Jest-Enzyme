@@ -5,18 +5,48 @@ import App from "./App"
 
 Enzyme.configure({adapter: new Adapter()})
 
-const app = shallow(<App />)
+describe("App", () => {
+    const app = shallow(<App />)
 
-it("renders correctly", () => {
-    expect(app).toMatchSnapshot()
-})
+    it("renders correctly", () => {
+        expect(app).toMatchSnapshot()
+    })
 
-it("initializes the `state` with an empty list of gifts", () => {
-    expect(app.state().gifts).toEqual([])
-})
+    it("initializes the `state` with an empty list of gifts", () => {
+        expect(app.state().gifts).toEqual([])
+    })
 
-it("adding new gift to the state when add gift button is clicked", () => {
-    app.find(".btn-add").simulate("click")
+    describe("when `Add Gift` button clicked", () => {
+        const id = 1
 
-    expect(app.state().gifts).toEqual([{id: 1}])
+        beforeEach(() => {
+            app.find(".btn-add").simulate("click")
+        })
+
+        afterEach(() => {
+            app.setState({gifts: []})
+        })
+
+        it("adding new gift to the state when add gift button is clicked", () => {
+            expect(app.state().gifts).toEqual([{id}])
+        })
+    
+        it("renders a new gift item when the add gift button is clicked", () => {
+            expect(app.find(".gift-list").children().length).toEqual(id)
+        })
+
+        it("creates a Gift component", () => {
+            expect(app.find("Gift").exists()).toBe(true)
+        })
+
+        describe("and the user wants to remove the gift", () => {
+            beforeEach(() => {
+                app.instance().removeGift(id)
+            })
+    
+            it("removes the gift from state", () => {
+                expect(app.state().gifts).toEqual([])
+            })
+        })
+    })
 })

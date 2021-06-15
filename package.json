@@ -44,6 +44,10 @@
     "react-test-renderer": "^17.0.2"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.jsx|.js",
+      "!src/index.js"
+    ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
